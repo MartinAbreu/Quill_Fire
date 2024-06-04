@@ -1,14 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect } from "react";
 import dynamic from "next/dynamic";
-import Quill from "quill";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
-import ImageResize from "quill-image-resize-module-react";
 
-Quill.register("modules/imageResize", ImageResize);
-
-function Form({ type, post, setPost, submitting, handleSubmit, errors }) {
+const Form = ({ type, post, setPost, submitting, handleSubmit, errors }) => {
   const quillModules = {
     toolbar: [
       [{ header: [1, 2, false] }],
@@ -20,11 +19,18 @@ function Form({ type, post, setPost, submitting, handleSubmit, errors }) {
       [{ align: [] }],
       ["clean"],
     ],
-    imageResize: {
+  };
+
+  useEffect(() => {
+    const Quill = require("quill");
+    const ImageResize = require("quill-image-resize-module-react");
+
+    Quill.register("modules/imageResize", ImageResize);
+    quillModules.imageResize = {
       parchment: Quill.import("parchment"),
       modules: ["Resize", "DisplaySize"],
-    },
-  };
+    };
+  }, []);
 
   const handleEditorChange = (content, delta, source, editor) => {
     const plainText = editor.getText(content);
@@ -200,6 +206,6 @@ function Form({ type, post, setPost, submitting, handleSubmit, errors }) {
       </form>
     </section>
   );
-}
+};
 
 export default Form;

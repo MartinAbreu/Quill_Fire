@@ -21,19 +21,14 @@ const EditTopic = () => {
 
   useEffect(() => {
     const getTopicDetails = async () => {
+      if (!topicId) return;
       const response = await fetch(`api/topic/${topicId}`);
       const data = await response.json();
 
-      setPost({
-        title: data.title,
-        topic: data.topic,
-        htmltopic: data.htmltopic,
-        tag: data.tag,
-        theme: data.theme,
-      });
+      setPost(data);
     };
 
-    if (topicId) getTopicDetails();
+    getTopicDetails();
   }, [topicId]);
 
   const editTopic = async (e) => {

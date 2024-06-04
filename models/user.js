@@ -22,7 +22,6 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
   },
   favColor: String,
   image: String,
