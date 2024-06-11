@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import Form from "@components/Form";
+import FormValidations from "@utils/validations";
 
 const EditTopic = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: session } = useSession();
   const topicId = searchParams.get("id");
 
   const [submitting, setIsSubmitting] = useState(false);
@@ -19,7 +22,23 @@ const EditTopic = () => {
     theme: "",
   });
 
+  const [isValid, error] = FormValidations(post, "topic");
+
+  const [errors, setErrors] = useState({
+    titleContent: false,
+    titleError: "",
+    topicContent: false,
+    topicError: "",
+    tagContent: false,
+    tagError: "",
+    themeSelected: false,
+    themeError: "",
+  });
+
   useEffect(() => {
+    if (!session?.user) {
+      return router.push("/");
+    }
     const getTopicDetails = async () => {
       if (!topicId) return;
       const response = await fetch(`api/topic/${topicId}`);
@@ -29,13 +48,20 @@ const EditTopic = () => {
     };
 
     getTopicDetails();
-  }, [topicId]);
+  }, [topicId, session?.user, router]);
 
   const editTopic = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     if (!topicId) return alert("Topic ID not found");
+
+    if (!isValid) {
+      setErrors(error);
+      setIsSubmitting(false);
+
+      return;
+    }
 
     const createdOn = new Date().toISOString();
 
@@ -69,6 +95,7 @@ const EditTopic = () => {
       setPost={setPost}
       submitting={submitting}
       handleSubmit={editTopic}
+      errors={errors}
     />
   );
 };

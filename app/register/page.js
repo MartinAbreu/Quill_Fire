@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { signIn, useSession, getProviders } from "next-auth/react";
@@ -43,6 +42,16 @@ const Register = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setErrors({
+      usernameField: false,
+      usernameFieldError: "",
+      passwordField: false,
+      passwordFieldError: "",
+      emailField: false,
+      emailFieldError: "",
+      signUpError: false,
+      signUpErrorString: "",
+    });
     setIsSubmitting(true);
 
     if (!isValid) {
@@ -138,10 +147,10 @@ const Register = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className='cred_input mt-6'
                   />
-                  <span className='text-red-600 italic text-xs float-left mb-6'>
+                  <span className='text-red-600 italic text-xs float-left'>
                     {errors.passwordField && errors.passwordFieldError}
                   </span>
-                  <div className='flex flex-col mt-5 border border-r-6 p-3'>
+                  <div className='flex flex-col mt-6 border border-r-6 p-3'>
                     <span className='flex text-gray-500 font-satoshi mb-3'>
                       Favorite Color:
                     </span>

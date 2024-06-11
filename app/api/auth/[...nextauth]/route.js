@@ -21,23 +21,37 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials.username || !credentials.password) {
+          console.log("No username or password provided");
           return null;
         }
 
-        const userExists = await User.findOne({
-          username: credentials.username,
-        });
+        try {
+          await connectToDB();
 
-        if (!userExists) return null;
+          const userExists = await User.findOne({
+            username: credentials.username,
+          });
 
-        const passwordsMatch = bcrypt.compare(
-          userExists.password,
-          credentials.password
-        );
+          if (!userExists) {
+            console.log("User does not exist");
+            return null;
+          }
 
-        if (!passwordsMatch) return null;
+          const passwordsMatch = await bcrypt.compare(
+            credentials.password,
+            userExists.password
+          );
 
-        return userExists;
+          if (!passwordsMatch) {
+            return null;
+          }
+
+          console.log("Authentication successful");
+          return userExists;
+        } catch (error) {
+          console.log("Error during authentication:", error);
+          return null;
+        }
       },
     }),
   ],
@@ -67,6 +81,7 @@ const handler = NextAuth({
           return true;
         } catch (err) {
           console.log(err);
+          return false;
         }
       } else {
         return true;

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { signIn, useSession, getProviders } from "next-auth/react";
@@ -41,7 +40,6 @@ const Login = () => {
     if (!isValid) {
       setErrors(error);
       setIsSubmitting(false);
-
       return;
     }
     await signIn("credentials", {
@@ -61,7 +59,7 @@ const Login = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.error("Error during sign-in:", error);
       })
       .finally(() => {
         setIsSubmitting(false);

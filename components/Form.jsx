@@ -1,14 +1,16 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect } from "react";
-import dynamic from "next/dynamic";
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+
 const Form = ({ type, post, setPost, submitting, handleSubmit, errors }) => {
-  const quillModules = {
+  const [isClient, setIsClient] = useState(false);
+  const [quillModules, setQuillModules] = useState({
     toolbar: [
       [{ header: [1, 2, false] }],
       [{ font: [] }],
@@ -19,18 +21,30 @@ const Form = ({ type, post, setPost, submitting, handleSubmit, errors }) => {
       [{ align: [] }],
       ["clean"],
     ],
-  };
+  });
 
   useEffect(() => {
-    const Quill = require("quill");
-    const ImageResize = require("quill-image-resize-module-react");
+    setIsClient(true);
+    (async () => {
+      const Quill = (await import("quill")).default;
+      const ImageResize = (await import("quill-image-resize-module-react"))
+        .default;
 
-    Quill.register("modules/imageResize", ImageResize);
-    quillModules.imageResize = {
-      parchment: Quill.import("parchment"),
-      modules: ["Resize", "DisplaySize"],
-    };
+      Quill.register("modules/imageResize", ImageResize);
+
+      setQuillModules((modules) => ({
+        ...modules,
+        imageResize: {
+          parchment: Quill.import("parchment"),
+          modules: ["Resize", "DisplaySize"],
+        },
+      }));
+    })();
   }, []);
+
+  if (!isClient) {
+    return null;
+  }
 
   const handleEditorChange = (content, delta, source, editor) => {
     const plainText = editor.getText(content);
@@ -60,13 +74,11 @@ const Form = ({ type, post, setPost, submitting, handleSubmit, errors }) => {
           </span>
           <input
             value={post.title}
-            onChange={(e) => {
-              setPost({ ...post, title: e.target.value });
-            }}
+            onChange={(e) => setPost({ ...post, title: e.target.value })}
             placeholder='Title'
             maxLength={40}
             className='form_input'
-          ></input>
+          />
           <span className='text-red-600 italic text-xs'>
             {errors.titleContent && errors.titleError}
           </span>
@@ -85,27 +97,25 @@ const Form = ({ type, post, setPost, submitting, handleSubmit, errors }) => {
         </span>
         <label>
           <span className='font-satoshi font-semibold text-base text-gray-700'>
-            Tag{` `}
+            Tag
             <span className='font-normal'>
               (#product, #webdevelopement, #idea)
             </span>
           </span>
           <input
             value={post.tag}
-            onChange={(e) => {
-              setPost({ ...post, tag: e.target.value });
-            }}
+            onChange={(e) => setPost({ ...post, tag: e.target.value })}
             placeholder='#tag'
             maxLength={50}
             className='form_input'
-          ></input>
+          />
           <span className='text-red-600 italic text-xs'>
             {errors.tagContent && errors.tagError}
           </span>
         </label>
         <label>
           <span className='font-satoshi font-semibold text-base text-gray-700'>
-            Color Theme{" "}
+            Color Theme
             <span className='font-normal'>
               (Add a little color to your topic...)
             </span>

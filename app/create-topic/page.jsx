@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -31,6 +31,12 @@ const CreateTopic = () => {
     themeSelected: false,
     themeError: "",
   });
+
+  useEffect(() => {
+    if (!session?.user) {
+      return router.push("/");
+    }
+  }, [session?.user, router]);
 
   const createTopic = async (e) => {
     e.preventDefault();
