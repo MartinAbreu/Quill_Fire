@@ -8,6 +8,7 @@ import FormValidations from "@utils/validations";
 
 const Register = () => {
   const [submitting, setIsSubmitting] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
   const [providers, setProviders] = useState(null);
@@ -38,6 +39,7 @@ const Register = () => {
       const res = await getProviders();
       setProviders(res);
     })();
+    setIsClient(true);
   }, [session?.user, router]);
 
   const handleSignUp = async (e) => {
@@ -84,7 +86,24 @@ const Register = () => {
       return;
     }
     if (data.success) {
-      router.push("/");
+      await signIn("credentials", {
+        redirect: false,
+        username,
+        password,
+      })
+        .then((response) => {
+          if (response.ok) {
+            router.replace("/");
+          } else {
+            return null;
+          }
+        })
+        .catch((error) => {
+          console.error("Error during sign-in:", error);
+        })
+        .finally(() => {
+          setIsSubmitting(false);
+        });
     } else {
       setErrors({
         signUpError: true,
@@ -94,6 +113,10 @@ const Register = () => {
       return;
     }
   };
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <section className='bg-gray-1 py-20 lg:py-[120px]'>

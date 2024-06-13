@@ -23,6 +23,8 @@ const Feed = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [isClient, setIsClient] = useState(false);
+
   const router = useRouter();
 
   const filterTopics = (searchtext) => {
@@ -59,7 +61,12 @@ const Feed = () => {
 
   useEffect(() => {
     fetchPost();
+    setIsClient(true);
   }, []);
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <section className='feed'>
