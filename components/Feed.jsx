@@ -56,12 +56,18 @@ const Feed = () => {
   const fetchPost = async () => {
     const res = await fetch("api/topic");
     const data = await res.json();
-    setPosts(data);
+
+    return data;
   };
 
   useEffect(() => {
-    fetchPost();
-    setIsClient(true);
+    const loadTopics = async () => {
+      const topics = await fetchPost();
+      setPosts(topics);
+      setIsClient(true);
+    };
+
+    loadTopics();
   }, []);
 
   if (!isClient) {

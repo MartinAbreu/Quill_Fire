@@ -81,7 +81,7 @@ const FormValidations = (content, formType) => {
       errors.passwordField = true;
       errors.passwordFieldError = "Password must be at least 8 characters";
     }
-    if (!/^[^s@]+@[^s@]+.[^s@]+$/.test(content.email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(content.email)) {
       valid = false;
       errors.emailField = true;
       errors.emailFieldError = "Please enter a valid email";
