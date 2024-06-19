@@ -1,4 +1,5 @@
 import Topic from "@models/topic";
+import User from "@models/user";
 import { connectToDB } from "@utils/database";
 
 const MAX_RETRIES = 3;
