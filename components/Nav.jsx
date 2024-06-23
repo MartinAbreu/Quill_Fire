@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import ProfileImage from "./ProfileImage";
 
 const Nav = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const path = usePathname();
 
   const [providers, setProviders] = useState(null);
@@ -19,6 +19,26 @@ const Nav = () => {
       setProviders(res);
     })();
   }, []);
+
+  if (status === "loading") {
+    return (
+      <nav className='flex-between w-full mb-16 pt-3'>
+        <Link href='/' className='flex gap-2 flex-center'>
+          <Image
+            src='/assets/images/logo.svg'
+            alt='QuillFire logo'
+            width={30}
+            height={30}
+            className='object-contain'
+          />
+          <p className='logo_text'>
+            Quill<span className='orange_gradient'>Fire</span>
+          </p>
+        </Link>
+        <div></div>
+      </nav>
+    );
+  }
 
   return (
     <nav className='flex-between w-full mb-16 pt-3'>
