@@ -57,17 +57,23 @@ const handler = NextAuth({
   ],
   callbacks: {
     async session({ session }) {
-      const sessionUser = await User.findOne({ email: session.user.email });
-      session.user.id = sessionUser._id.toString();
-      session.user.username = sessionUser.username;
-      session.user.favColor = sessionUser.favColor;
+      try {
+        await connectToDB();
+        const sessionUser = await User.findOne({ email: session.user.email });
+        session.user.id = sessionUser._id.toString();
+        session.user.username = sessionUser.username;
+        session.user.favColor = sessionUser.favColor;
 
-      return session;
+        return session;
+      } catch (error) {
+        console.log("Error in session callback:", error);
+        return session;
+      }
     },
     async signIn({ account, profile }) {
-      await connectToDB();
-      if (account.provider === "google") {
-        try {
+      try {
+        await connectToDB();
+        if (account.provider === "google") {
           const userExists = await User.findOne({ email: profile.email });
 
           if (!userExists) {
@@ -79,12 +85,12 @@ const handler = NextAuth({
           }
 
           return true;
-        } catch (err) {
-          console.log(err);
-          return false;
+        } else {
+          return true;
         }
-      } else {
-        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
       }
     },
   },
