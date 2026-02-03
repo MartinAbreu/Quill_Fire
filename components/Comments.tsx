@@ -2,10 +2,12 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { createdOnDateTime } from "@utils/tools";
+import { createdOnDateTime } from '@/utils/tools.js';
 import ProfileImage from "./ProfileImage";
+import { Comment } from '@/types'
 
-const Comment = ({ comment }) => {
+
+const CommentItem = ({ comment } : { comment: Comment}) => {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -39,7 +41,7 @@ const Comment = ({ comment }) => {
     </div>
   );
 };
-const Comments = ({ comments, topicId, onCommentAdded }) => {
+const Comments = ({ comments, topicId, onCommentAdded }: { comments: Comment[]; topicId: string; onCommentAdded: (comment: Comment) => void }) => {
   const { data: session } = useSession();
   const [newComment, setNewComment] = useState("");
 
@@ -55,7 +57,7 @@ const Comments = ({ comments, topicId, onCommentAdded }) => {
       }),
     });
 
-    const data = await response.json();
+    const data: Comment = await response.json();
 
     if (response.ok) {
       onCommentAdded(data);
@@ -91,10 +93,10 @@ const Comments = ({ comments, topicId, onCommentAdded }) => {
       )}
       {comments.length ? (
         <div className='flex flex-col gap-3'>
-          {comments.map((comment, idx) => {
+          {comments.map((comment) => {
             return (
-              <div key={idx}>
-                <Comment comment={comment} />
+              <div key={comment._id}>
+                <CommentItem comment={comment} />
                 <div className='w-full border border-gray-200 my-2'></div>
               </div>
             );

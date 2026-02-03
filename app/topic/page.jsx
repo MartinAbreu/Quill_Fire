@@ -8,10 +8,10 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.bubble.css";
-import { createdOnDateTime } from "@utils/tools";
-import LikeDislike from "@components/LikeDislike";
-import Comments from "@components/Comments";
-import ProfileImage from "@components/ProfileImage";
+import { createdOnDateTime } from "@/utils/tools";
+import LikeDislike from "@/components/LikeDislike";
+import Comments from "@/components/Comments";
+import ProfileImage from "@/components/ProfileImage";
 
 const Topic = () => {
   const { data: session } = useSession();
@@ -60,11 +60,11 @@ const Topic = () => {
       setComments(
         data.sort((a, b) => {
           return new Date(b.createdOn) - new Date(a.createdOn); // descending
-        })
+        }),
       );
     };
 
-    if (topicId) getTopicDetails(), getTopicComments();
+    if (topicId) (getTopicDetails(), getTopicComments());
   }, [topicId]);
 
   const handleProfileClick = () => {

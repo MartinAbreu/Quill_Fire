@@ -1,14 +1,34 @@
-const FormValidations = (content, formType) => {
+import { FormErrors } from "@/types";
+
+type TopicContent = {
+  title: string;
+  topic: string;
+  tag: string;
+  theme: string;
+};
+
+type SignInContent = {
+  username: string;
+  password: string;
+};
+
+type SignUpContent = {
+  username: string;
+  password: string;
+  email: string;
+};
+
+export function validateTopic(content: TopicContent): [boolean, FormErrors] {
   let valid = true;
-  const errors = {};
-  if (formType === "topic") {
-    if (content.title.length === 0) {
+  const errors: FormErrors = {};
+
+  if (content.title.length === 0) {
       valid = false;
       errors.titleContent = true;
       errors.titleError = "Please add your title...";
-    }
-
-    if (content.topic.length === 0) {
+  }
+  
+  if (content.topic.length === 0) {
       valid = false;
       errors.topicContent = true;
       errors.topicError = "Please create your topic...";
@@ -31,9 +51,15 @@ const FormValidations = (content, formType) => {
       errors.themeSelected = true;
       errors.themeError = "Please select the theme for your topic...";
     }
-  }
-  if (formType === "signIn") {
-    if (content.username.length === 0) {
+  
+  return [valid, errors];
+}
+
+export function validateSignIn(content: SignInContent): [boolean, FormErrors] {
+  let valid = true;
+  let errors: FormErrors = {}
+
+  if (content.username.length === 0) {
       valid = false;
       errors.usernameField = true;
       errors.usernameFieldError = "Please enter your username...";
@@ -43,9 +69,15 @@ const FormValidations = (content, formType) => {
       errors.passwordField = true;
       errors.passwordFieldError = "Please enter your password...";
     }
-  }
-  if (formType === "signUp") {
-    if (!/^[a-zA-Z0-9._]+$/.test(content.username)) {
+  
+  return [valid, errors]
+}
+
+export function validateSignUp(content: SignUpContent): [boolean, FormErrors] {
+  let valid = true;
+  let errors: FormErrors = {};
+
+  if (!/^[a-zA-Z0-9._]+$/.test(content.username)) {
       valid = false;
       errors.usernameField = true;
       errors.usernameFieldError =
@@ -86,9 +118,6 @@ const FormValidations = (content, formType) => {
       errors.emailField = true;
       errors.emailFieldError = "Please enter a valid email";
     }
-  }
-
-  return [valid, errors];
-};
-
-export default FormValidations;
+  
+  return [valid, errors]
+}

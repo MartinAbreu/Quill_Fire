@@ -1,5 +1,5 @@
-import Topic from "@models/topic";
-import { connectToDB } from "@utils/database";
+import Topic from "@/models/topic";
+import { connectToDB } from "@/utils/database";
 
 export const POST = async (request) => {
   const { userId, title, topic, htmltopic, tag, theme, createdOn } =

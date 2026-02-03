@@ -1,5 +1,5 @@
-import Topic from "@models/topic";
-import { connectToDB } from "@utils/database";
+import Topic from "@/models/topic";
+import { connectToDB } from "@/utils/database";
 
 export const PUT = async (req, { params }) => {
   console.log(req.body);
@@ -11,14 +11,14 @@ export const PUT = async (req, { params }) => {
     if (action === "undislike") {
       updateDislikes = await Topic.updateOne(
         { _id: params.id },
-        { $pull: { dislikes: userId } }
+        { $pull: { dislikes: userId } },
       );
     }
 
     if (action === "dislike") {
       updateDislikes = await Topic.updateOne(
         { _id: params.id },
-        { $addToSet: { dislikes: userId } }
+        { $addToSet: { dislikes: userId } },
       );
     }
 

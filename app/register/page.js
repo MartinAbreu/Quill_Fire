@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { signIn, useSession, getProviders } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import FormValidations from "@utils/validations";
+import { validateSignUp } from "@/utils/validations";
 
 const Register = () => {
   const [submitting, setIsSubmitting] = useState(false);
@@ -16,10 +16,7 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [favColor, setFavColor] = useState("");
-  const [isValid, error] = FormValidations(
-    { username, password, email },
-    "signUp"
-  );
+  const [isValid, error] = validateSignUp({ username, password, email });
   const [errors, setErrors] = useState({
     usernameField: false,
     usernameFieldError: "",

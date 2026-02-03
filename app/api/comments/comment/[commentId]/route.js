@@ -1,5 +1,5 @@
-import Comment from "@models/comment";
-import { connectToDB } from "@utils/database";
+import Comment from "@/models/comment";
+import { connectToDB } from "@/utils/database";
 
 export const DELETE = async (request, { params }) => {
   try {

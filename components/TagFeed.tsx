@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import TopicCard from "./TopicCard";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Topic } from "@/types";
 
-const TopicCardList = ({ data, handleTagClick }) => {
+const TopicCardList = ({ data, handleTagClick }: {data: Topic[], handleTagClick: (tag: string) => void}) => {
   return (
     <div className='mt-16 topic_layout'>
       {data.map((topic) => (
@@ -19,11 +20,11 @@ const TopicCardList = ({ data, handleTagClick }) => {
   );
 };
 
-const TagFeed = ({ tag, desc }) => {
-  const [posts, setPosts] = useState([]);
+const TagFeed = ({ tag, desc }: {tag: string, desc: string}) => {
+  const [posts, setPosts] = useState<Topic[]>([]);
   const router = useRouter();
 
-  const handleTagClick = (tag) => {
+  const handleTagClick = (tag: string) => {
     router.push(`/tag?tag=${tag.replace("#", "")}`);
   };
   const handleReturnClick = () => {
@@ -32,12 +33,20 @@ const TagFeed = ({ tag, desc }) => {
 
   useEffect(() => {
     const fetchPost = async () => {
-      const res = await fetch("api/topic", {
+      try {
+        const res = await fetch("api/topic", {
         method: "POST",
         body: JSON.stringify({ tag: tag }),
-      });
-      const data = await res.json();
+        });
+        
+        if (!res.ok) {
+          throw new Error('Failed to fetch topics')
+        }
+      const data = await res.json() as Topic[];
       setPosts(data);
+      } catch (error) {
+        console.error("Error fetching topics:", error)
+      }
     };
     fetchPost();
   }, [tag]);

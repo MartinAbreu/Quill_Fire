@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import TagFeed from "@components/TagFeed";
+import TagFeed from "@/components/TagFeed";
 
 const TagFeedPage = () => {
   const searchParams = useSearchParams();

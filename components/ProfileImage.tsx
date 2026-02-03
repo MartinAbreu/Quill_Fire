@@ -1,7 +1,9 @@
 import Image from "next/image";
+import { User } from "@/types";
 
-const ProfileImage = ({ user, onClick }) => {
-  const initials = user.username.match(/(\b\w{2})/g).join("");
+const ProfileImage = ({ user, onClick } : { user: User, onClick?: React.MouseEventHandler<HTMLDivElement>}) => {
+  const matchResult = user.username.match(/(\b\w{2})/g);
+  const initials = matchResult ? matchResult.join("") : "??";
   return (
     <div>
       {user.image ? (

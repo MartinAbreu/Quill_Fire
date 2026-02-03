@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import TopicCard from "./TopicCard";
 import { useRouter } from "next/navigation";
+import { Topic } from "@/types";
 
-const TopicCardList = ({ data, handleTagClick }) => {
+const TopicCardList = ({ data, handleTagClick }:
+  { data: Topic[], 
+    handleTagClick: (tag: string) => void }) => {
   return (
     <div className='mt-16 topic_layout'>
       {data.map((topic) => (
@@ -20,14 +23,14 @@ const TopicCardList = ({ data, handleTagClick }) => {
 
 const Feed = () => {
   const [searchText, setSearchText] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchTimeout, setSearchTimeout] = useState(null);
-  const [posts, setPosts] = useState([]);
+  const [searchResults, setSearchResults] = useState<Topic[]>([]);
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [posts, setPosts] = useState<Topic[]>([]);
   const [isClient, setIsClient] = useState(false);
 
   const router = useRouter();
 
-  const filterTopics = (searchtext) => {
+  const filterTopics = (searchtext: string) => {
     const regex = new RegExp(searchtext, "i"); // 'i' flag for case-insensitive search
     return posts.filter(
       (item) =>
@@ -37,8 +40,8 @@ const Feed = () => {
     );
   };
 
-  const handleSearchChange = (e) => {
-    clearTimeout(searchTimeout);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    searchTimeout && clearTimeout(searchTimeout)
     setSearchText(e.target.value);
 
     setSearchTimeout(
@@ -49,7 +52,7 @@ const Feed = () => {
     );
   };
 
-  const handleTagClick = (tag) => {
+  const handleTagClick = (tag: string) => {
     router.push(`/tag?tag=${tag.replace("#", "")}`);
   };
 

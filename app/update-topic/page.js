@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-import Form from "@components/Form";
-import FormValidations from "@utils/validations";
+import Form from "@/components/Form";
+import { validateTopic } from "@/utils/validations";
 
 const EditTopic = () => {
   const router = useRouter();
@@ -22,7 +22,7 @@ const EditTopic = () => {
     theme: "",
   });
 
-  const [isValid, error] = FormValidations(post, "topic");
+  const [isValid, error] = validateTopic(post);
 
   const [errors, setErrors] = useState({
     titleContent: false,

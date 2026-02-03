@@ -1,5 +1,5 @@
-import Topic from "@models/topic";
-import { connectToDB } from "@utils/database";
+import Topic from "@/models/topic";
+import { connectToDB } from "@/utils/database";
 
 export const GET = async (req, { params }) => {
   try {

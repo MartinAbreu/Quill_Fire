@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { FormEventHandler, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
 import "react-quill/dist/quill.snow.css";
+import { FormErrors, Topic } from "@/types";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-const Form = ({ type, post, setPost, submitting, handleSubmit, errors }) => {
+const Form = ({ type, post, setPost, submitting, handleSubmit, errors } : { type: string, post: Topic, setPost: (post: Topic) => void, submitting: boolean, handleSubmit: FormEventHandler<HTMLFormElement>, errors: FormErrors}) => {
   const [isClient, setIsClient] = useState(false);
   const [quillModules, setQuillModules] = useState({
     toolbar: [
@@ -46,7 +47,7 @@ const Form = ({ type, post, setPost, submitting, handleSubmit, errors }) => {
     return null;
   }
 
-  const handleEditorChange = (content, delta, source, editor) => {
+  const handleEditorChange = (content: string, _delta: any, _source: any, editor: any) => {
     const plainText = editor.getText(content);
     setPost({
       ...post,
@@ -90,7 +91,6 @@ const Form = ({ type, post, setPost, submitting, handleSubmit, errors }) => {
           placeholder='Write your topic...'
           modules={quillModules}
           onChange={handleEditorChange}
-          required
         />
         <span className='text-red-600 italic text-xs'>
           {errors.topicContent && errors.topicError}

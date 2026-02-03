@@ -1,6 +1,6 @@
-import Topic from "@models/topic";
-import User from "@models/user";
-import { connectToDB } from "@utils/database";
+import Topic from "@/models/topic";
+import User from "@/models/user";
+import { connectToDB } from "@/utils/database";
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000; // milliseconds

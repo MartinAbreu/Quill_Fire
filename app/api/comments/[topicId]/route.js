@@ -1,11 +1,11 @@
-import Comment from "@models/comment";
-import { connectToDB } from "@utils/database";
+import Comment from "@/models/comment";
+import { connectToDB } from "@/utils/database";
 
 export const GET = async (request, { params }) => {
   try {
     await connectToDB();
     const comments = await Comment.find({ topicId: params.topicId }).populate(
-      "creator"
+      "creator",
     );
 
     if (!comments) return new Response("Comments not found", { status: 401 });

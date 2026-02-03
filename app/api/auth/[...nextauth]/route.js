@@ -3,8 +3,8 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
-import { connectToDB } from "@utils/database";
-import User from "@models/user";
+import { connectToDB } from "@/utils/database";
+import User from "@/models/user";
 
 const handler = NextAuth({
   providers: [
@@ -39,7 +39,7 @@ const handler = NextAuth({
 
           const passwordsMatch = await bcrypt.compare(
             credentials.password,
-            userExists.password
+            userExists.password,
           );
 
           if (!passwordsMatch) {

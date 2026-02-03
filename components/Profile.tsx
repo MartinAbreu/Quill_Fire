@@ -1,3 +1,4 @@
+import { Topic } from "@/types";
 import TopicCard from "./TopicCard";
 
 const Profile = ({
@@ -7,6 +8,13 @@ const Profile = ({
   handleEdit,
   handleDelete,
   handleTagClick,
+}: {
+  name: string,
+    desc: string,
+    data: Topic[],
+    handleEdit: (topic: Topic) => void,
+    handleDelete: (topic: Topic) => void
+  handleTagClick: (tag: string) => void
 }) => {
   return (
     <section className='w-full'>
@@ -19,9 +27,9 @@ const Profile = ({
           <TopicCard
             key={topic._id}
             post={topic}
-            handleEdit={() => handleEdit && handleEdit(topic)}
-            handleDelete={() => handleDelete && handleDelete(topic)}
-            handleTagClick={handleTagClick}
+            handleEdit={() => handleEdit?.(topic)}
+            handleDelete={() => handleDelete?.(topic)}
+            handleTagClick={() => handleTagClick}
           />
         ))}
       </div>

@@ -2,17 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { createdOnDateTime } from "@utils/tools";
+import { createdOnDateTime } from "@/utils/tools";
 import LikeDislike from "./LikeDislike";
 import ProfileImage from "./ProfileImage";
+import { Topic } from "@/types";
 
-const TopicCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
+const TopicCard = ({ post, handleTagClick, handleEdit, handleDelete }:
+  {
+    post: Topic, handleTagClick: (tag: string) => void,
+    handleEdit?: React.MouseEventHandler<HTMLParagraphElement>,
+    handleDelete?: React.MouseEventHandler<HTMLParagraphElement>
+  }) => {
   const { data: session } = useSession();
   const pathName = usePathname();
   const router = useRouter();
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState<string[]>([]);
 
   const handleCardBg = () => {
     return `url('/assets/images/backgrounds/${post.theme || "bg5"}.svg')`;
@@ -31,7 +36,7 @@ const TopicCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
   };
 
   useEffect(() => {
-    const textToArray = (text) => {
+    const textToArray = (text: string) => {
       const commaSeparated = text.split(",");
       const result = commaSeparated.map((item) => {
         return item.split(" ").map((part) => part.trim());
@@ -53,7 +58,7 @@ const TopicCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
           <LikeDislike topicId={post._id} iconSize={20} />
         </div>
 
-        <p className='my-4 font-satoshi text-sm text-gray-700' max=''>
+        <p className='my-4 font-satoshi text-sm text-gray-700' >
           {`${post.topic.substring(0, 45)}...`}
         </p>
         <span className='text-xs font-satoshi italic text-gray-400'>

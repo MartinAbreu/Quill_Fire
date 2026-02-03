@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import TopicCard from "@components/TopicCard";
+import TopicCard from "@/components/TopicCard";
 
 const UserProfile = ({ params }) => {
   const param = useSearchParams();

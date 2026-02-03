@@ -1,6 +1,6 @@
-import Topic from "@models/topic";
-import Comment from "@models/comment";
-import { connectToDB } from "@utils/database";
+import Topic from "@/models/topic";
+import Comment from "@/models/comment";
+import { connectToDB } from "@/utils/database";
 
 export const GET = async (request, { params }) => {
   try {

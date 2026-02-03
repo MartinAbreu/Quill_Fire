@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { signOut, useSession, getProviders } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import ProfileImage from "./ProfileImage";
 
@@ -10,7 +10,7 @@ const Nav = () => {
   const { data: session, status } = useSession();
   const path = usePathname();
 
-  const [providers, setProviders] = useState(null);
+  const [_providers, setProviders] = useState<Record<string, any> | null>(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const Nav = () => {
                   Create Post
                 </Link>
 
-                <button type='button' className='outline_btn' onClick={signOut}>
+                <button type='button' className='outline_btn' onClick={() => signOut}>
                   Sign Out
                 </button>
 

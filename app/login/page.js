@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { signIn, useSession, getProviders } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import FormValidations from "@utils/validations";
+import { validateSignIn } from "@/utils/validations";
 
 const Login = () => {
   const [submitting, setIsSubmitting] = useState(false);
@@ -13,7 +13,7 @@ const Login = () => {
   const [providers, setProviders] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isValid, error] = FormValidations({ username, password }, "signIn");
+  const [isValid, error] = validateSignIn({ username, password });
 
   const [errors, setErrors] = useState({
     usernameField: false,

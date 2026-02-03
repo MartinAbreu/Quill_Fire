@@ -1,5 +1,5 @@
-import User from "@models/user";
-import { connectToDB } from "@utils/database";
+import User from "@/models/user";
+import { connectToDB } from "@/utils/database";
 
 export const POST = async (req, res) => {
   if (req.method === "POST") {
@@ -19,7 +19,7 @@ export const POST = async (req, res) => {
 
     const { emailExists, usernameExists } = await doesUserExist(
       newUser.email,
-      newUser.username
+      newUser.username,
     );
 
     if (emailExists) {
@@ -29,7 +29,7 @@ export const POST = async (req, res) => {
           message: "A user with the same email already exists!",
           userExists: true,
         }),
-        { status: 400 }
+        { status: 400 },
       );
     }
     if (usernameExists) {
@@ -39,7 +39,7 @@ export const POST = async (req, res) => {
           message: "This username already exists",
           userExists: true,
         }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -49,12 +49,12 @@ export const POST = async (req, res) => {
       console.log(storeUser);
       return new Response(
         JSON.stringify({ success: true, message: "User has been created" }),
-        { status: 200 }
+        { status: 200 },
       );
     } catch (err) {
       return new Response(
         JSON.stringify({ success: false, message: "Invalid method" }),
-        { status: 400 }
+        { status: 400 },
       );
     }
   }

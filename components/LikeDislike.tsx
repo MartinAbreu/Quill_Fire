@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-const LikeDislike = ({ topicId, iconSize }) => {
+const LikeDislike = ({ topicId, iconSize } : {topicId: string, iconSize: number}) => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [isLiked, setIsliked] = useState(false);
   const [isDisliked, setIsdisliked] = useState(false);
-  const [isLikeLoading, setIsLikeLoading] = useState(false);
-  const [isDislikeLoading, setIsDislikeLoading] = useState(false);
+  const [_isLikeLoading, setIsLikeLoading] = useState(false);
+  const [_isDislikeLoading, setIsDislikeLoading] = useState(false);
   const [likesUpdated, setLikesUpdated] = useState(false);
 
   const { data: session } = useSession();
@@ -25,13 +25,13 @@ const LikeDislike = ({ topicId, iconSize }) => {
       setIsLikeLoading(false);
       setIsDislikeLoading(false);
 
-      topic.likes.map((like) => {
+      topic.likes.map((like: string) => {
         if (like === session?.user.id) {
           setIsliked(true);
         }
       });
 
-      topic.dislikes.map((dislike) => {
+      topic.dislikes.map((dislike: string) => {
         if (dislike === session?.user.id) {
           setIsdisliked(true);
         }
@@ -41,7 +41,7 @@ const LikeDislike = ({ topicId, iconSize }) => {
     if (topicId) getLikesDislikes();
   }, [topicId, likesUpdated, session?.user.id]);
 
-  const handleLike = async (e) => {
+  const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsLikeLoading(true);
 
@@ -111,7 +111,7 @@ const LikeDislike = ({ topicId, iconSize }) => {
       }
     }
   };
-  const handleDislike = async (e) => {
+  const handleDislike = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsDislikeLoading(true);
 
