@@ -1,5 +1,5 @@
 "use client";
-
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -75,60 +75,62 @@ const Topic = () => {
 
   return (
     <section className='w-full'>
-      {topic?.topic && (
-        <div className='grid max-w-7xl xs:grid-cols-1 md:grid-cols-4 mx-auto bg-white rounded-md'>
-          <div
-            className='flex flex-col items-center'
-            style={{
-              backgroundImage: `url('/assets/images/backgrounds/${
-                topic.theme || "bg5"
-              }.svg')`,
-            }}
-          >
+      <Suspense fallback={<p>loading...</p>}>
+        {topic?.topic && (
+          <div className='grid max-w-7xl xs:grid-cols-1 md:grid-cols-4 mx-auto bg-white rounded-md'>
             <div
-              className='flex flex-col justify-center items-center gap-3 cursor-pointer mt-8'
-              onClick={handleProfileClick}
+              className='flex flex-col items-center'
+              style={{
+                backgroundImage: `url('/assets/images/backgrounds/${
+                  topic.theme || "bg5"
+                }.svg')`,
+              }}
             >
-              <span className='font-satoshi font-semibold text-gray-700'>
-                Author
-              </span>
-              <ProfileImage user={userInfo} onClick={handleProfileClick} />
+              <div
+                className='flex flex-col justify-center items-center gap-3 cursor-pointer mt-8'
+                onClick={handleProfileClick}
+              >
+                <span className='font-satoshi font-semibold text-gray-700'>
+                  Author
+                </span>
+                <ProfileImage user={userInfo} onClick={handleProfileClick} />
 
-              <div className='text-center'>
-                <h3 className='font-satoshi font-semibold text-gray-900'>
-                  {userInfo.username}
-                </h3>
-                <p className='font-inter text-xs text-gray-500'>
-                  {userInfo.email}
-                </p>
+                <div className='text-center'>
+                  <h3 className='font-satoshi font-semibold text-gray-900'>
+                    {userInfo.username}
+                  </h3>
+                  <p className='font-inter text-xs text-gray-500'>
+                    {userInfo.email}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className='col-span-3 m-8'>
-            <div className='flex justify-between'>
-              <h1 className='text-6xl text-center font-medium font-satoshi text-gray-700 mb-8 text-wrap'>
-                {topic.title}
-              </h1>
-              <LikeDislike topicId={topicId} iconSize={30} />
-            </div>
+            <div className='col-span-3 m-8'>
+              <div className='flex justify-between'>
+                <h1 className='text-6xl text-center font-medium font-satoshi text-gray-700 mb-8 text-wrap'>
+                  {topic.title}
+                </h1>
+                <LikeDislike topicId={topicId} iconSize={30} />
+              </div>
 
-            <ReactQuill
-              theme='bubble'
-              value={topic.htmltopic}
-              className='bg-white rounded-md text-gray-700'
-              readOnly={true}
-            />
-            <span className=' flex justify-end col-span-2 text-gray-400 text-xs'>
-              {createdOnDateTime(topic.createdOn)}
-            </span>
-            <Comments
-              comments={comments}
-              topicId={topic.topicId}
-              onCommentAdded={handleAddedComment}
-            />
+              <ReactQuill
+                theme='bubble'
+                value={topic.htmltopic}
+                className='bg-white rounded-md text-gray-700'
+                readOnly={true}
+              />
+              <span className=' flex justify-end col-span-2 text-gray-400 text-xs'>
+                {createdOnDateTime(topic.createdOn)}
+              </span>
+              <Comments
+                comments={comments}
+                topicId={topic.topicId}
+                onCommentAdded={handleAddedComment}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </Suspense>
     </section>
   );
 };

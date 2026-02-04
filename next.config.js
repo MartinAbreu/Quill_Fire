@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+const { version } = require("./package.json");
+
 const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ["mongoose"],
@@ -16,6 +19,9 @@ const nextConfig = {
       topLevelAwait: true,
     };
     return config;
+  },
+  env: {
+    APP_VERSION: version,
   },
 };
 
