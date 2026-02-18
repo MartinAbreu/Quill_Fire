@@ -5,17 +5,18 @@ import { useState, useEffect } from "react";
 import { signIn, useSession, getProviders } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { validateSignIn } from "@/utils/validations";
+import { FormErrors } from "@/types";
 
 const Login = () => {
   const [submitting, setIsSubmitting] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
-  const [providers, setProviders] = useState(null);
+  const [_providers, setProviders] = useState<Awaited<ReturnType<typeof getProviders>>>(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isValid, error] = validateSignIn({ username, password });
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<FormErrors>({
     usernameField: false,
     usernameFieldError: "",
     passwordField: false,
@@ -34,7 +35,7 @@ const Login = () => {
     })();
   }, [session?.user, router]);
 
-  const handleSignIn = async (e) => {
+  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     if (!isValid) {
@@ -48,15 +49,21 @@ const Login = () => {
       password,
     })
       .then((response) => {
-        if (response.ok) {
+        try {
+          if (response?.ok) {
           router.replace("/");
         } else {
-          setErrors({
+            setErrors({
+            ...errors,
             invalidCreds: true,
             invalidCredsError:
               "Username or Password is incorrect, please try again.",
           });
         }
+        } catch (error) {
+          console.error(error)
+        }
+        
       })
       .catch((error) => {
         console.error("Error during sign-in:", error);

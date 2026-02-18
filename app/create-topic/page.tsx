@@ -1,18 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 import Form from "@/components/Form";
 import { validateTopic } from "@/utils/validations";
+import { FormErrors, FormTopic } from "@/types";
 
 const CreateTopic = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
   const [submitting, setIsSubmitting] = useState(false);
-  const [post, setPost] = useState({
+  const [post, setPost] = useState<FormTopic>({
     title: "",
     topic: "",
     htmltopic: "",
@@ -21,7 +22,7 @@ const CreateTopic = () => {
   });
   const [isValid, error] = validateTopic(post);
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<FormErrors>({
     titleContent: false,
     titleError: "",
     topicContent: false,
@@ -38,7 +39,7 @@ const CreateTopic = () => {
     }
   }, [session?.user, router]);
 
-  const createTopic = async (e) => {
+  const createTopic = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 

@@ -1,11 +1,4 @@
-import { FormErrors } from "@/types";
-
-type TopicContent = {
-  title: string;
-  topic: string;
-  tag: string;
-  theme: string;
-};
+import { FormErrors, FormTopic } from "@/types";
 
 type SignInContent = {
   username: string;
@@ -18,7 +11,7 @@ type SignUpContent = {
   email: string;
 };
 
-export function validateTopic(content: TopicContent): [boolean, FormErrors] {
+export function validateTopic(content: FormTopic): [boolean, FormErrors] {
   let valid = true;
   const errors: FormErrors = {};
 
@@ -46,7 +39,7 @@ export function validateTopic(content: TopicContent): [boolean, FormErrors] {
       errors.tagError = "Please make some hashtags for your topic...";
     }
 
-    if (content.theme.length === 0) {
+    if (content.theme?.length === 0) {
       valid = false;
       errors.themeSelected = true;
       errors.themeError = "Please select the theme for your topic...";
