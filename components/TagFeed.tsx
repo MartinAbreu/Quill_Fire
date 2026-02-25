@@ -20,7 +20,7 @@ const TopicCardList = ({ data, handleTagClick }: {data: Topic[], handleTagClick:
   );
 };
 
-const TagFeed = ({ tag, desc }: {tag: string, desc: string}) => {
+const TagFeed = ({ tag, desc }: {tag: string | null, desc: string}) => {
   const [posts, setPosts] = useState<Topic[]>([]);
   const router = useRouter();
 

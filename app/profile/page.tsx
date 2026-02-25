@@ -5,15 +5,16 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 import Profile from "@/components/Profile";
+import { Topic } from "@/types";
 
 const MyProfile = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Topic[]>([]);
 
   useEffect(() => {
     const fetchPost = async () => {
-      const res = await fetch(`api/users/${session.user.id}/posts`);
+      const res = await fetch(`api/users/${session?.user.id}/posts`);
       const data = await res.json();
       setPosts(data);
     };
@@ -23,14 +24,14 @@ const MyProfile = () => {
     }
   }, [session?.user.id]);
 
-  const handleTagClick = (tag) => {
+  const handleTagClick = (tag:string) => {
     router.push(`/tag?tag=${tag.replace("#", "")}`);
   };
 
-  const handleEdit = (post) => {
+  const handleEdit = (post:Topic) => {
     router.push(`/update-topic?id=${post._id}`);
   };
-  const handleDelete = async (post) => {
+  const handleDelete = async (post:Topic) => {
     const hasConfirmed = confirm("Are you sure you want to delete your topic?");
 
     if (hasConfirmed) {

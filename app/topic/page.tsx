@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -12,20 +11,21 @@ import { createdOnDateTime } from "@/utils/tools";
 import LikeDislike from "@/components/LikeDislike";
 import Comments from "@/components/Comments";
 import ProfileImage from "@/components/ProfileImage";
+import type { Topic, User, Comment } from "@/types";
 
 const Topic = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const params = useSearchParams();
   const topicId = params.get("topicId");
-  const [topic, setTopic] = useState({});
-  const [comments, setComments] = useState({});
-  const [userInfo, setUserInfo] = useState({});
+  const [topic, setTopic] = useState<Topic>();
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [userInfo, setUserInfo] = useState<User | null>(null);
 
-  const handleAddedComment = (newComment) => {
-    const updatedComment = {
+  const handleAddedComment = (newComment: Comment) => {
+    const updatedComment: Comment = {
       ...newComment,
-      creator: { username: session?.user.username, image: session?.user.image },
+      creator: {_id: session?.user.id ?? "", username: session?.user.username ?? "", image: session?.user.image, email: session?.user.email ?? "" },
     };
     setComments([updatedComment, ...comments]);
   };
@@ -33,19 +33,22 @@ const Topic = () => {
   useEffect(() => {
     const getTopicDetails = async () => {
       const response = await fetch(`api/topic/${topicId}`);
-      const data = await response.json();
+      const data: Topic = await response.json();
       setTopic({
+        _id: data._id,
+        creator: data.creator,
         title: data.title,
         topic: data.topic,
         htmltopic: data.htmltopic,
         tag: data.tag,
         theme: data.theme,
         createdOn: data.createdOn,
-        creator: data.creator,
-        topicId: data._id,
+        likes: data.likes ?? [],
+        dislikes: data.dislikes ?? [],
       });
 
       setUserInfo({
+        _id: data.creator._id,
         username: data.creator.username,
         image: data.creator.image,
         email: data.creator.email,
@@ -55,28 +58,30 @@ const Topic = () => {
 
     const getTopicComments = async () => {
       const response = await fetch(`api/comments/${topicId}`);
-      const data = await response.json();
+      const data: Comment[] = await response.json();
 
       setComments(
-        data.sort((a, b) => {
-          return new Date(b.createdOn) - new Date(a.createdOn); // descending
+        [...data].sort((a, b) => {
+          return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime(); // descending
         }),
       );
     };
 
-    if (topicId) (getTopicDetails(), getTopicComments());
+    if (!topicId) return;
+    getTopicDetails();
+    getTopicComments();
   }, [topicId]);
 
   const handleProfileClick = () => {
-    if (topic.creator._id === session?.user.id) return router.push("/profile");
+    if (topic?.creator._id === session?.user.id) return router.push("/profile");
 
-    router.push(`/profile/${topic.creator._id}?name=${userInfo.username}`);
+    router.push(`/profile/${topic?.creator._id}?name=${userInfo?.username}`);
   };
 
   return (
     <section className='w-full'>
       <Suspense fallback={<p>loading...</p>}>
-        {topic?.topic && (
+        {topic?.topic && userInfo && (
           <div className='grid max-w-7xl xs:grid-cols-1 md:grid-cols-4 mx-auto bg-white rounded-md'>
             <div
               className='flex flex-col items-center'
@@ -110,7 +115,7 @@ const Topic = () => {
                 <h1 className='text-6xl text-center font-medium font-satoshi text-gray-700 mb-8 text-wrap'>
                   {topic.title}
                 </h1>
-                <LikeDislike topicId={topicId} iconSize={30} />
+                {topicId && <LikeDislike topicId={topicId} iconSize={30} />}
               </div>
 
               <ReactQuill
@@ -124,7 +129,7 @@ const Topic = () => {
               </span>
               <Comments
                 comments={comments}
-                topicId={topic.topicId}
+                topicId={topic._id}
                 onCommentAdded={handleAddedComment}
               />
             </div>

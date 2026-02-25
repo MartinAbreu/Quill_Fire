@@ -5,19 +5,20 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import TopicCard from "@/components/TopicCard";
+import { Topic } from "@/types";
 
-const UserProfile = ({ params }) => {
+const UserProfile = ({ params }: { params: { id?: string } }) => {
   const param = useSearchParams();
   const username = param.get("name");
 
   const router = useRouter();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Topic[]>([]);
 
   const handleReturnClick = () => {
     router.push("/");
   };
 
-  const handleTagClick = (tag) => {
+  const handleTagClick = (tag:string) => {
     router.push(`/tag?tag=${tag.replace("#", "")}`);
   };
 
@@ -45,12 +46,10 @@ const UserProfile = ({ params }) => {
       </h1>
       <p className='desc text-left'>{`Check out what ${username} been writing about!`}</p>
       <div className='mt-8 topic_layout'>
-        {posts.map((post) => (
+        {posts.map((topic) => (
           <TopicCard
-            key={post._id}
-            post={post}
-            handleEdit={() => handleEdit && handleEdit(post)}
-            handleDelete={() => handleDelete && handleDelete(post)}
+            key={topic._id}
+            post={topic}
             handleTagClick={handleTagClick}
           />
         ))}

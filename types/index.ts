@@ -56,4 +56,6 @@ export type FormErrors = {
   emailFieldError?: string,
   invalidCreds?: boolean,
   invalidCredsError?: string,
+  signUpError?: boolean,
+  signUpErrorString?: string
 }

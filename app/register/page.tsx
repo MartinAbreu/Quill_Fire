@@ -5,19 +5,20 @@ import { useState, useEffect } from "react";
 import { signIn, useSession, getProviders } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { validateSignUp } from "@/utils/validations";
+import { FormErrors } from "@/types";
 
 const Register = () => {
   const [submitting, setIsSubmitting] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
-  const [providers, setProviders] = useState(null);
+  const [_providers, setProviders] = useState<Awaited<ReturnType<typeof getProviders>>>(null);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [favColor, setFavColor] = useState("");
   const [isValid, error] = validateSignUp({ username, password, email });
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<FormErrors>({
     usernameField: false,
     usernameFieldError: "",
     passwordField: false,
@@ -39,7 +40,7 @@ const Register = () => {
     setIsClient(true);
   }, [session?.user, router]);
 
-  const handleSignUp = async (e) => {
+  const handleSignUp = async (e: React.MouseEvent) => {
     e.preventDefault();
     setErrors({
       usernameField: false,
@@ -89,8 +90,8 @@ const Register = () => {
         password,
       })
         .then((response) => {
-          if (response.ok) {
-            router.replace("/");
+          if (response?.ok) {
+            return router.replace("/");
           } else {
             return null;
           }
