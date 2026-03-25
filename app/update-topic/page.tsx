@@ -6,6 +6,8 @@ import { useSession } from "next-auth/react";
 import { Suspense } from "react";
 import Form from "@/components/Form";
 import { validateTopic } from "@/utils/validations";
+import { FormErrors , FormTopic } from "@/types";
+
 
 const EditTopic = () => {
   const router = useRouter();
@@ -14,7 +16,7 @@ const EditTopic = () => {
   const topicId = searchParams.get("id");
 
   const [submitting, setIsSubmitting] = useState(false);
-  const [post, setPost] = useState({
+  const [post, setPost] = useState<FormTopic>({
     title: "",
     topic: "",
     htmltopic: "",
@@ -24,7 +26,7 @@ const EditTopic = () => {
 
   const [isValid, error] = validateTopic(post);
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<FormErrors>({
     titleContent: false,
     titleError: "",
     topicContent: false,
@@ -50,7 +52,7 @@ const EditTopic = () => {
     getTopicDetails();
   }, [topicId, session?.user, router]);
 
-  const editTopic = async (e) => {
+  const editTopic = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 

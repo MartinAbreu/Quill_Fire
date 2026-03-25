@@ -1,13 +1,14 @@
 import "@/styles/globals.css";
 import Nav from "@/components/Nav";
 import Provider from "@/components/Provider";
+import { ReactNode } from "react";
 
 export const metadata = {
   title: "Quillfire",
   description: "Discover and Create Your Kind of Topics",
 };
 
-const layout = ({ children }) => {
+const layout = ({ children } : {children: ReactNode}) => {
   return (
     <html lang='en'>
       <body>
