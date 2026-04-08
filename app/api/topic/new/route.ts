@@ -1,9 +1,9 @@
 import Topic from "@/models/topic";
 import { connectToDB } from "@/utils/database";
 
-export const POST = async (request) => {
+export const POST = async (req: Request) => {
   const { userId, title, topic, htmltopic, tag, theme, createdOn } =
-    await request.json();
+    await req.json();
 
   try {
     await connectToDB();

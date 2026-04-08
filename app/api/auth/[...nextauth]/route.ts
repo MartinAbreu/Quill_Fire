@@ -9,8 +9,8 @@ import User from "@/models/user";
 const handler = NextAuth({
   providers: [
     GoogleProvider({
-      clientId: process.env.GAUTHID,
-      clientSecret: process.env.GAUTHSECRET,
+      clientId: process.env.GAUTHID || '',
+      clientSecret: process.env.GAUTHSECRET || '',
     }),
     CredentialsProvider({
       name: "credentials",
@@ -20,7 +20,7 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials.username || !credentials.password) {
+        if (!credentials?.username || !credentials.password) {
           console.log("No username or password provided");
           return null;
         }
@@ -73,14 +73,20 @@ const handler = NextAuth({
     async signIn({ account, profile }) {
       try {
         await connectToDB();
+        if (!account) return false;
+        if (account.provider !== 'google') return true
+        if (!profile?.email || !profile?.name) return false;
+
         if (account.provider === "google") {
           const userExists = await User.findOne({ email: profile.email });
 
           if (!userExists) {
+            const picture = (profile as { picture?: string }).picture;
+
             await User.create({
               email: profile.email,
               username: profile.name.replace(" ", "").toLowerCase(),
-              image: profile.picture,
+              image: picture,
             });
           }
 

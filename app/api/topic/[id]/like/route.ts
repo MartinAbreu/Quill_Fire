@@ -1,7 +1,7 @@
 import Topic from "@/models/topic";
 import { connectToDB } from "@/utils/database";
 
-export const PUT = async (req, { params }) => {
+export const PUT = async (req: Request, { params } : { params: { id: string}}) => {
   const { userId, action } = await req.json();
   let updateLikes;
   try {
@@ -20,8 +20,8 @@ export const PUT = async (req, { params }) => {
       );
     }
 
-    if (updateLikes.modifiedCount !== 1) {
-      return res.status(500).json({ message: "Failed to like topic" });
+    if (updateLikes?.modifiedCount !== 1) {
+          return new Response(JSON.stringify({message: "Failed to like topic"}), { status: 500 });
     }
     const updatedTopic = await Topic.findOne({ _id: params.id });
     return new Response(JSON.stringify(updatedTopic), { status: 200 });

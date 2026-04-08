@@ -1,7 +1,7 @@
 import Comment from "@/models/comment";
 import { connectToDB } from "@/utils/database";
 
-export const GET = async (request, { params }) => {
+export const GET = async (_req: Request, { params }: {params: {topicId: string}}) => {
   try {
     await connectToDB();
     const comments = await Comment.find({ topicId: params.topicId }).populate(
@@ -16,8 +16,9 @@ export const GET = async (request, { params }) => {
   }
 };
 
-export const POST = async (req, { params }) => {
-  const { topicId, content, creator, createdOn } = await req.json();
+export const POST = async (req: Request, { params }: { params: { topicId: string } }) => {
+  const { content, creator, createdOn } = await req.json();
+  const { topicId } = params;
   try {
     await connectToDB();
     const newComment = new Comment({

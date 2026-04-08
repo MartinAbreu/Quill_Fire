@@ -1,7 +1,7 @@
 import Topic from "@/models/topic";
 import { connectToDB } from "@/utils/database";
 
-export const GET = async (req, { params }) => {
+export const GET = async (_req: Request, { params }: {params: { id: string}}) => {
   try {
     await connectToDB();
     const topics = await Topic.find({ creator: params.id }).populate("creator");

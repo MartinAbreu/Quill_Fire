@@ -1,5 +1,4 @@
 import Topic from "@/models/topic";
-import User from "@/models/user";
 import { connectToDB } from "@/utils/database";
 
 const MAX_RETRIES = 3;
@@ -20,7 +19,7 @@ const getTopicsWithRetry = async (retries = MAX_RETRIES) => {
   }
 };
 
-export const GET = async (request) => {
+export const GET = async (_req: Request) => {
   const { topics, error } = await getTopicsWithRetry();
 
   if (error) {
@@ -31,7 +30,7 @@ export const GET = async (request) => {
   return new Response(JSON.stringify(topics), { status: 200 });
 };
 
-export const POST = async (req) => {
+export const POST = async (req: Request) => {
   const { tag } = await req.json();
   try {
     await connectToDB();

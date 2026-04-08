@@ -1,7 +1,7 @@
 import Comment from "@/models/comment";
 import { connectToDB } from "@/utils/database";
 
-export const DELETE = async (request, { params }) => {
+export const DELETE = async (_request: Request, { params }: {params: {commentId: string}}) => {
   try {
     await connectToDB();
 

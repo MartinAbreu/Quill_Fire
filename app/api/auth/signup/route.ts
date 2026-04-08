@@ -1,11 +1,10 @@
 import User from "@/models/user";
-import { connectToDB } from "@/utils/database";
 
-export const POST = async (req, res) => {
-  if (req.method === "POST") {
+export const POST = async (req: Request) => {
+  
     const newUser = await req.json();
 
-    const doesUserExist = async (email, username) => {
+    const doesUserExist = async (email: string, username: string) => {
       const [userByEmail, userByUsername] = await Promise.all([
         User.findOne({ email }),
         User.findOne({ username }),
@@ -57,5 +56,5 @@ export const POST = async (req, res) => {
         { status: 400 },
       );
     }
-  }
+  
 };

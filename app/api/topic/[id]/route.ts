@@ -2,7 +2,7 @@ import Topic from "@/models/topic";
 import Comment from "@/models/comment";
 import { connectToDB } from "@/utils/database";
 
-export const GET = async (request, { params }) => {
+export const GET = async (_req: Request, { params }: {params: { id: string}}) => {
   try {
     await connectToDB();
     const topic = await Topic.findById(params.id).populate("creator");
@@ -15,9 +15,9 @@ export const GET = async (request, { params }) => {
   }
 };
 
-export const PATCH = async (request, { params }) => {
+export const PATCH = async (req: Request, { params } : { params: { id: string}}) => {
   const { title, topic, htmltopic, tag, theme, createdOn } =
-    await request.json();
+    await req.json();
 
   try {
     await connectToDB();
@@ -41,7 +41,7 @@ export const PATCH = async (request, { params }) => {
   }
 };
 
-export const DELETE = async (request, { params }) => {
+export const DELETE = async (_req: Request, { params } : { params: { id: string}}) => {
   try {
     await connectToDB();
 
@@ -53,6 +53,6 @@ export const DELETE = async (request, { params }) => {
       status: 200,
     });
   } catch (err) {
-    return new Response("Failed to delete topic ad comments", { status: 500 });
+    return new Response("Failed to delete topic and comments", { status: 500 });
   }
 };
