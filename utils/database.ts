@@ -10,17 +10,20 @@ export const connectToDB = async () => {
     return;
   }
 
+  if (!process.env.MONGODB_URI) {
+    console.error("No database connected")
+    return;
+  }
+
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
       dbName: "quill_fire_db",
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
     });
 
     isConnected = true;
 
     console.log("MongoDB connected");
   } catch (error) {
-    console.log(error);
+    console.log(error instanceof Error ? error.message: error);
   }
 };

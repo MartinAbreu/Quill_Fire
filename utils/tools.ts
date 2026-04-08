@@ -1,5 +1,5 @@
-export const createdOnDateTime = (date) => {
-  const createdOnIsoString = date; // Assuming the response from your API
+export const createdOnDateTime = (date: string) => {
+  const createdOnIsoString = date;
 
   const createdOnDate = new Date(createdOnIsoString);
 
