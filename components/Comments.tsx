@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { createdOnDateTime } from '@/utils/tools.js';
+import { createdOnDateTime } from '@/utils/tools';
 import ProfileImage from "./ProfileImage";
 import { Comment } from '@/types'
 
